@@ -27,7 +27,7 @@ const only = role_name => (req, res, next) => {
   if (req.decodedToken.role_name  === role_name) {
       next();
   } else {
-      res.status(403).json({message: "User does not have correct permission'})
+      res.status(403).json({message: "User does not have correct permission"})
   }
 }
 

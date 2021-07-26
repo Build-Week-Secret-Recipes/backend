@@ -6,7 +6,7 @@ function find(){
     .select("u.user_id","u.username","r.role_name")
 }
 function findBy(filter){
-    reutrn db("users as u")
+    return db("users as u")
     .join("roles as r","u.role_id","r.role_id")
     .where(filter)
     .select("u.user_id","u.username","u.passowrd","r.role_name")
