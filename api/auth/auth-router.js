@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken")
 router.post("/register", validateRoleName, (req,res,next) =>{
     let user = req.body
     const rounds = process.envBCRYPT_ROUNDS || 8;
+    const hash = bcrypt.hashSync(user.password, rounds);
     user.password = hash
     Users.add(user)
     .then(user =>{

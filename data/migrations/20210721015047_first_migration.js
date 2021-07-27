@@ -17,21 +17,12 @@ exports.up = function(knex) {
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT')
   })
-  .createTable('posts', tbl => {
-    tbl.increments()
-    tbl.text('contents')
-    tbl.integer('user_id')
-        .unsigned()
-        .references('id')
-        .inTable('users')
-        .onUpdate('CASCADE')
-        .onDelete('CASCADE')
-  })
+  
+  
 };
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists('posts')
     .dropTableIfExists('users')
     .dropTableIfExists('roles')
     
