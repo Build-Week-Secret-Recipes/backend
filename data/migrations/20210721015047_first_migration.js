@@ -3,7 +3,7 @@ exports.up = function(knex) {
   return knex.schema
   .createTable('roles', tbl =>{
     tbl.increments('role_id')
-    tbl.string('role_id',32).notNullable().unique()
+    tbl.string('role_name',32).notNullable().unique()
   })
   .createTable('users', tbl =>{
      tbl.increments('user_id')
@@ -12,7 +12,7 @@ exports.up = function(knex) {
      tbl.integer('role_id')
       .unsigned()
       .notNullable()
-      .refrences('role_id')
+      .references('role_id')
       .inTable('roles')
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT')
