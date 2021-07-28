@@ -11,7 +11,7 @@ function findById(id) {
 function findIngredients(recipeId) {
     return db('ingredients as i')
         .join('recipes as r', 'r.recipes_id', 'i.recipes_id')
-        .select('i.recipes_id as recipe', 'r.recipe_name as name', 'i.ingredients_id', 'i.ingredients_name as ingredient', 'i.ingredients_unit as iu')
+        .select('i.recipes_id as recipe', 'r.recipe_name as name', 'i.ingredients_id', 'i.ingredients_name as ingredient', 'i.ingredients_unit')
         .where('i.recipes_id', recipeId);
 }
 
@@ -29,7 +29,7 @@ function findSteps(recipeId) {
 }
 function findStepsById(id) {
     return db('steps')
-        .where({ id })
+        .where('steps_id',id)
         .first();
 }
 function insert(recipe) {
@@ -49,7 +49,7 @@ function insertIngredient(ingredients, recipes_id) {
 
 function update(id, changes) {
     return db('recipes')
-        .where({ id })
+        .where('recipes_id',id)
         .update(changes);
 }
 

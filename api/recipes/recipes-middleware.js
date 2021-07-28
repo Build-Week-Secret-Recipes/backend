@@ -10,7 +10,7 @@ async function checkId(req, res, next) {
       req.recipe = recipe
       next()
     }else{
-      res.staus(404).json("Recipe not found")
+      res.status(404).json("Recipe not found")
     }
   }catch(err){
     next(err)

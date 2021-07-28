@@ -123,7 +123,7 @@ router.put('/:id', (req, res) => {
             res.status(201).json(recipe);
         })
         .catch((err) => {
-            res.status(500).json({ message: `Problem updating recipe ` });
+            res.status(500).json(err);
         });
 });
 
