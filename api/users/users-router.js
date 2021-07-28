@@ -1,10 +1,9 @@
 const router = require("express").Router();
-const users = require('./users-model.js')
-const {restricted,only} = require('../auth/auth-middleware.js')
-
+const Users = require('./users-model.js')
+const {restricted,only,checkIdUsers} = require('../auth/auth-middleware.js')
 //GET /api/users
 router.get('/', (req, res) => {
-    users.find()
+    Users.find()
         .then(users => {
             res.status(200).json(users);
         })
@@ -14,19 +13,13 @@ router.get('/', (req, res) => {
 });
 
 //GET /api/users/:id
-router.get('/:id', (req, res) => {
-    users.findById(req.params.id)
-        .then(users => {
-            res.status(200).json(users);
-        })
-        .catch(err => {
-            res.status(500).json({ message: 'Problem retrieving users' });
-        });
+router.get('/:id', checkIdUsers, async (req, res) => {
+    res.status(200).json(req.users)
 });
 
 //GET /api/users/:id/recipes
 router.get('/:id/recipes', (req, res) => {
-    users.findusersRecipes(req.params.id)
+    Users.findUsersRecipes(req.params.id)
         .then(recipe => {
             res.status(200).json(recipe);
         })
@@ -37,7 +30,7 @@ router.get('/:id/recipes', (req, res) => {
 
 //GET /api/users/:id/recipes/:id
 router.get('/:id/recipes/:id', (req, res) => {
-    users.findusersRecipes(req.params.id)
+    Users.findUsersRecipes(req.params.id)
         .then(recipe => {
             if (recipe) {
                 users.findusersRecipesById(req.params.id)
@@ -53,7 +46,7 @@ router.get('/:id/recipes/:id', (req, res) => {
 
 //POST /api/users
 router.post('/', (req, res) => {
-    users.insert(req.body)
+    Users.insert(req.body)
         .then(users => {
             res.status(201).json(users);
         })
@@ -64,7 +57,7 @@ router.post('/', (req, res) => {
 
 //POST /api/users/:id/recipes
 router.post('/:id/recipes', (req, res) => {
-    users.findusersRecipes(req.params.id)
+    Users.findUsersRecipes(req.params.id)
         .then(recipe => {
             if (recipe) {
                 users.insertRecipe(req.body, req.params.id)
@@ -80,7 +73,7 @@ router.post('/:id/recipes', (req, res) => {
 
 //PUT /api/users/:id
 router.put('/:id', (req, res) => {
-    users.update(req.params.id, req.body)
+    Users.update(req.params.id, req.body)
         .then(users => {
             res.status(201).json(users);
         })
@@ -91,7 +84,7 @@ router.put('/:id', (req, res) => {
 
 //PUT /api/users/:id/recipes/:id
 router.put('/:id/recipes/:id', (req, res) => {
-    users.findusersRecipes(req.params.id)
+    Users.findusersRecipes(req.params.id)
         .then(recipe => {
             if (recipe) {
                 users.updateusersRecipe(req.params.id, req.body)
@@ -106,19 +99,18 @@ router.put('/:id/recipes/:id', (req, res) => {
 });
 
 //DELETE /api/users/:id
-router.delete('/:id', (req, res) => {
-    users.remove(req.params.id)
-        .then(users => {
-            res.status(201).json(users);
-        })
-        .catch((err) => {
-            res.status(500).json({ message: 'Problem deleting users' });
-        });
+router.delete('/:id',checkIdUsers,async (req, res,next) => {
+    try {
+        const deletedUser = await Users.remove(req.params.id)
+        res.status(200).json({message:"user was deleted"})
+    } catch (err) {
+        next(err)
+    }
 });
 
 //DELETE /api/users/:id/recipes/:id
 router.delete('/:id/recipes/:id', (req, res) => {
-    users.findusersRecipes(req.params.id)
+    Users.findusersRecipes(req.params.id)
         .then(recipe => {
             if (recipe) {
                 users.removeusersRecipe(req.params.id)

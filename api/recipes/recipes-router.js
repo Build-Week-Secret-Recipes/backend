@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 
 //GET /api/recipes/:id
 router.get('/:id', checkId, async (req, res) => {
-    res.status(200).json(req.post)
+    res.status(200).json(req.recipe)
 });
 
 //GET /api/recipes/:id/ingredients

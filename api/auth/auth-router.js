@@ -1,18 +1,18 @@
 const bcrypt = require('bcryptjs')
 const router = require("express").Router();
-const{restricted,checkusersnameExists,validateRoleName,only,} = require('./auth-middleware')
+const{restricted,checkusernameExists,validateRoleName,only,} = require('./auth-middleware')
 const {JWT_SECRET} = require('../auth/secrets/index.js')
 const { default: jwtDecode } = require('jwt-decode');
-const users = require('../auth/auth-model.js')
+const Users = require('../auth/auth-model.js')
 const jwt = require("jsonwebtoken")
 
 //POST to /api/auth/register
-router.post("/register", validateRoleName, (req,res,next) =>{
+router.post("/register", (req,res,next) =>{
     let users = req.body
     const rounds = process.envBCRYPT_ROUNDS || 8;
     const hash = bcrypt.hashSync(users.password, rounds);
     users.password = hash
-    users.add(users) 
+    Users.add(users) 
     .then(users =>{
         res.status(201).json(users)
     })
@@ -24,16 +24,14 @@ router.post("/register", validateRoleName, (req,res,next) =>{
 
 
 
-router.post('/login', checkusersnameExists,(req,res,next) =>{
-    let{usersname,password} = req.body;
-    
-    
-    users.findBy({usersname})
+router.post('/login', checkusernameExists,(req,res,next) =>{
+    let{username,password} = req.body;
+    Users.findBy({username})
     .then(([users]) =>{
         if(users && bcrypt.compareSync(password,users.password)){
             const token = makeToken(users)
             res.status(200).json({
-                message:`Welcome back ${users.usersname}!`,
+                message:`Welcome back ${users.username}!`,
                 token
             })
         }else{
@@ -48,7 +46,7 @@ router.post('/login', checkusersnameExists,(req,res,next) =>{
 function makeToken(users){
     const payload = {
         subject:users.users_id,
-        usersname:users.usersname,
+        username:users.username,
     }
     const options ={
         expiresIn:'1d'
