@@ -19,14 +19,14 @@ router.get('/:id', checkId, async (req, res) => {
 });
 
 //GET /api/recipes/:id/ingredients
-router.get('/:id/ingredients', (req, res) => {
-    Recipes.findIngredients(req.params.id)
-        .then(ingredients => {
-            res.status(200).json(ingredients);
-        })
-        .catch(err => {
-            res.status(500).json({ message: 'Problem getting ingredients' });
-        });
+router.get('/:id/ingredients', async (req, res) => {
+    try{
+    const ingredients = await Recipes.findIngredients(req.params.id)
+    res.json(ingredients) 
+  }
+  catch(e){
+    res.status(500).json(e.message)
+  }
 });
 //GET /api/recipes/:id/steps
 router.get('/:id/steps', (req, res) => {

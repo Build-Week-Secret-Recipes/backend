@@ -10,14 +10,14 @@ function findById(id) {
 
 function findIngredients(recipeId) {
     return db('ingredients as i')
-        .join('recipes as r', 'r.ingredients_id', 'i.recipes_id')
-        .select('i.recipes_id as recipe', 'r.recipe_name as name', 'i.ingredients_id', 'i.ingredient_name as ingredient', 'i.quantity as q')
+        .join('recipes as r', 'r.recipes_id', 'i.recipes_id')
+        .select('i.recipes_id as recipe', 'r.recipe_name as name', 'i.ingredients_id', 'i.ingredients_name as ingredient', 'i.ingredients_unit as iu')
         .where('i.recipes_id', recipeId);
 }
 
 function findIngredientsById(id) {
     return db('ingredients')
-        .where({ id })
+        .where("ingredients_id", id)
         .first();
 }
 
