@@ -1,44 +1,73 @@
 const db = require('../../data/db-config.js')
 
 function find(){
-    return db("users as u")
-    .join("roles as r", "u.role_id","r.role_id")
-    .select("u.user_id","u.username","r.role_name")
-}
-function findBy(filter){
-    return db("users as u")
-    .join("roles as r","u.role_id","r.role_id")
-    .where(filter)
-    .select("u.user_id","u.username","u.password","r.role_name")
+    return db('users')
 }
 
-function findById(user_id){
-    return db("users a u")
-    .join("roles as r","u.role_id","r.role_id")
-    .where({user_id})
-    .select("u.user_id","u.username","r.role_name")
+function findById(id){
+    return db('users')
+    .where({id})
     .first()
 }
 
-async function add({username,password,role_name}){
-    let created_user_id
-    await db.transaction(async trx =>{
-        let role_id_to_use
-        const [role] = await trx('roles').where('role_name',role_name)
-        if(role){
-            role_id_to_use = role.role_id
-        }else{
-        const [role_id] = await trx('roles').insert({ role_name: role_name })
-            role_id_to_use = role_id
-        }
-         const [user_id] = await trx('users').insert({ username, password, role_id: role_id_to_use })
-         created_user_id = user_id
-    })
-    return findById(created_user_id)
+function findusersRecipes(usersId) {
+    return db('recipes as r')
+        .join('users as u', 'u.recipes_id', 'r.users_id')
+        .select('r.users_id as users', 'r.id', 'r.recipe_name as name', 'r.description', 'r.prep_time', 'r.cook_time')
+        .where('r.users_id', usersId)
 }
+
+function findusersRecipesById(id) {
+    return db('recipes')
+        .where({ id })
+        .first();
+}
+
+function insert(users) {
+    return db('users')
+        .insert(users)
+        .then(ids => {
+            return findById(ids[0]);
+        });
+}
+
+function insertRecipe(recipes, users_id) {
+    return db('recipes').insert({ ...recipes, users_id });
+}
+
+function update(id, changes) {
+    return db('users')
+        .where('users_id', id)
+        .update(changes);
+}
+
+function updateusersRecipe(id, changes) {
+    return db('recipes')
+        .where('recipes_id', id)
+        .update(changes);
+}
+
+function remove(id) {
+    return db('users')
+        .where('users_id', id)
+        .del();
+}
+
+function removeusersRecipe(id) {
+    return db('recipes')
+        .where('recipes_id', id)
+        .del();
+}
+
 module.exports = {
-  add,
-  find,
-  findBy,
-  findById,
+    find,
+    findById,
+    findusersRecipes,
+    findusersRecipesById,
+    insert,
+    insertRecipe,
+    update,
+    updateusersRecipe,
+    remove,
+    removeusersRecipe
 };
