@@ -1,7 +1,7 @@
 const {default: jwtDecode}= require('jwt-decode')
 const jwt = require("jsonwebtoken")
 const {JWT_SECRET} = require('../auth/secrets/index.js')
-const Users = require('../users/users-model.js')
+const users = require('../auth/auth-model.js')
 
 const restricted = (req,res,next) =>{
     const token = req.headers.authorization;
@@ -27,17 +27,17 @@ const only = role_name => (req, res, next) => {
   if (req.decodedToken.role_name  === role_name) {
       next();
   } else {
-      res.status(403).json({message: "User does not have correct permission"})
+      res.status(403).json({message: "users does not have correct permission"})
   }
 }
 
-const checkUsernameExists = async (req,res,next)=>{
+const checkusersnameExists = async (req,res,next)=>{
     try {
-        const rows = await Users.findBy({username:req.body.username})
+        const rows = await users.findBy({usersname:req.body.usersname})
         if(!rows.length){
             res.status(401).json({message:"Invalid Credentials"})
         }else{
-            req.userData=rows[0]
+            req.usersData=rows[0]
             next()
         }
     } catch (err) {
@@ -49,7 +49,7 @@ const checkUsernameExists = async (req,res,next)=>{
 const validateRoleName = (req,res,next) =>{
     const {role_name} = req.body;
     if(role_name === undefined || role_name.trim() ===""){
-        req.body.role_name="user"
+        req.body.role_name="users"
         next()
     }else if(role_name.trim().length >32){
         res.status(422).json({
@@ -62,7 +62,7 @@ const validateRoleName = (req,res,next) =>{
 }
 module.exports = {
   restricted,
-  checkUsernameExists,
+  checkusersnameExists,
   validateRoleName,
   only,
 }

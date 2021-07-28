@@ -1,45 +1,54 @@
 const bcrypt = require('bcryptjs')
 const router = require("express").Router();
-const{restricted,checkUsernameExists,validateRoleName,only,} = require('./auth-middleware')
+const{restricted,checkusersnameExists,validateRoleName,only,} = require('./auth-middleware')
 const {JWT_SECRET} = require('../auth/secrets/index.js')
 const { default: jwtDecode } = require('jwt-decode');
-const Users = require('../users/users-model.js')
+const users = require('../auth/auth-model.js')
 const jwt = require("jsonwebtoken")
 
+//POST to /api/auth/register
 router.post("/register", validateRoleName, (req,res,next) =>{
-    let user = req.body
+    let users = req.body
     const rounds = process.envBCRYPT_ROUNDS || 8;
-    const hash = bcrypt.hashSync(user.password, rounds);
-    user.password = hash
-    Users.add(user)
-    .then(user =>{
-        res.status(201).json(user)
+    const hash = bcrypt.hashSync(users.password, rounds);
+    users.password = hash
+    users.add(users) 
+    .then(users =>{
+        res.status(201).json(users)
     })
-    .catch(next)
+     .catch(err => {
+            console.log('ERR', err)
+            res.status(500).json({ message: 'Registration failed' });
+        });
 })
-router.post('/login', checkUsernameExists,(req,res,next) =>{
-    let{username,password} = req.body;
 
-    Users.findBy({username})
-    .then(([user]) =>{
-        if(user && bcrypt.compareSync(password,user.password)){
-            const token = makeToken(user)
+
+
+router.post('/login', checkusersnameExists,(req,res,next) =>{
+    let{usersname,password} = req.body;
+    
+    
+    users.findBy({usersname})
+    .then(([users]) =>{
+        if(users && bcrypt.compareSync(password,users.password)){
+            const token = makeToken(users)
             res.status(200).json({
-                message:`Welcome back ${user.username}!`,
+                message:`Welcome back ${users.usersname}!`,
                 token
             })
         }else{
             res.status(401).json({message:'Invalid Credentials'})
         }
     })
-    .catch(next)
+    .catch(err => {
+            res.status(500).json({ message: 'Problem logging in' });
+        });
 })
 
-function makeToken(user){
+function makeToken(users){
     const payload = {
-        subject:user.user_id,
-        username:user.username,
-        role_name:user.role_name
+        subject:users.users_id,
+        usersname:users.usersname,
     }
     const options ={
         expiresIn:'1d'
