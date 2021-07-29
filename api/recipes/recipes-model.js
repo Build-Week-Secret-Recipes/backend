@@ -24,7 +24,7 @@ function findIngredientsById(id) {
 function findSteps(recipeId) {
     return db('steps as s')
         .join('recipes as r', 'r.recipes_id', 's.recipes_id')
-        .select('s.recipes_id ', 'r.recipe_name', 's.steps_id', 's.steps_order', 's.steps_name')
+        .select('s.recipes_id ', 'r.recipe_name', 's.steps_id', 's.steps_order', 's.steps_name as step_instructions')
         .where('s.recipes_id', recipeId);
 }
 function findStepsById(id) {
