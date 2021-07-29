@@ -89,7 +89,7 @@ router.post('/:id/ingredients', (req, res) => {
             if (recipe) {
                 Recipes.insertIngredient(req.body, req.params.id)
                     .then(ingredient => {
-                        res.status(201).json(ingredient);
+                        res.status(201).json({message:""});
                     })
             }
         })
@@ -107,7 +107,7 @@ router.post('/:id/steps', (req, res) => {
             if (recipe) {
                 Recipes.insertStep(req.body, req.params.id)
                     .then(step => {
-                        res.status(201).json(step);
+                        res.status(201).json({message:"New step added"});
                     })
             }
         })
@@ -120,7 +120,7 @@ router.post('/:id/steps', (req, res) => {
 router.put('/:id', (req, res) => {
     Recipes.update(req.params.id, req.body)
         .then(recipe => {
-            res.status(201).json(recipe);
+            res.status(201).json({message:"recipe updated"});
         })
         .catch((err) => {
             res.status(500).json(err);
@@ -134,7 +134,7 @@ router.put('/:id/ingredients/:id', (req, res) => {
             if (ingredient) {
                 Recipes.updateIngredient(req.params.id, req.body)
                     .then(newIngredient => {
-                        res.status(201).json(newIngredient);
+                        res.status(201).json({message:"Ingredients updated"});
                     });
             }
         })
@@ -150,7 +150,7 @@ router.put('/:id/steps/:id', (req, res) => {
             if (ingredient) {
                 Recipes.updateStep(req.params.id, req.body)
                     .then(newStep => {
-                        res.status(201).json(newStep);
+                        res.status(201).json({message:"New step added!"});
                     });
             }
         })
@@ -185,7 +185,7 @@ router.delete('/:id/ingredients/:id', (req, res) => {
             res.status(500).json({ message: 'Problem deleting ingredients' });
         });
 });
-//DELETE /api/recipes/:id/ingredients/:id
+//DELETE /api/recipes/:id/steps/:id
 router.delete('/:id/steps/:id', (req, res) => {
     Recipes.findSteps(req.params.id)
         .then(step => {

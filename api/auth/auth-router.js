@@ -23,7 +23,7 @@ router.post("/register", (req,res,next) =>{
 })
 
 
-
+//POST to /api/auth/login
 router.post('/login', checkusernameExists,(req,res,next) =>{
     let{username,password} = req.body;
     Users.findBy({username})
