@@ -1,7 +1,8 @@
 exports.seed = function(knex, Promise) {
     return knex('steps').insert([   
         //Spaghet
-        { steps_name: 'preheat oven',steps_order:'1',recipes_id:'1'},
+        { steps_name: 'preheat oven',
+        steps_order:'1',recipes_id:'1'},
         { steps_name: 'boil water in a pot',steps_order:'2',recipes_id:'1'},
         { steps_name: 'add pasta',steps_order:'3',recipes_id:'1'},
         { steps_name: 'add tomato sauce',steps_order:'4',recipes_id:'1'},

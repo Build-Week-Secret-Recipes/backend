@@ -1,6 +1,7 @@
 exports.seed = function(knex, Promise) {
     return knex('ingredients').insert([   
-      {ingredients_name: 'water',ingredients_unit:'cups', recipes_id:1},
+      {ingredients_name: 'water',
+      ingredients_unit:'cups', recipes_id:1},
       {ingredients_name: 'pasta',ingredients_unit:'oz', recipes_id:1},
       {ingredients_name: 'tomato sauce',ingredients_unit: 'oz', recipes_id:1},  
       {ingredients_name: 'Seasoned Hamburger beyond meat',ingredients_unit:'oz',recipes_id:2},
