@@ -33,7 +33,7 @@
     "knex": "^0.95.7",
     "morgan": "^1.10.0",
     "shortid": "^2.2.16",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
