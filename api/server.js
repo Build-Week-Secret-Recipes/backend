@@ -10,6 +10,9 @@ const server = express();
 server.use(helmet());
 server.use(express.json());
 
+server.get('/', (req, res) => {
+  res.send(`<h2>api is up! Start by running /api/recipes to get recipes to get recipes!</h2>`);
+});
 server.use('/api/auth',authRouter)
 server.use('/api/users',usersRouter)
 server.use('/api/recipes',recipeRouter)
