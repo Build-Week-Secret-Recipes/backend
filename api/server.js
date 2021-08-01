@@ -7,10 +7,10 @@ const usersRouter = require('./users/users-router.js')
 const recipeRouter = require('./recipes/recipes-router.js')
 
 const server = express();
-server.use(cors());
 
 server.use(helmet());
 server.use(express.json());
+server.use(cors());
 
 server.get('/', (req, res) => {
   res.send(`<h2>api is up! Start by running /api/recipes to get recipes to get recipes!
