@@ -14,6 +14,7 @@ server.get('/', (req, res) => {
   res.send(`<h2>api is up! Start by running /api/recipes to get recipes to get recipes!
   https://github.com/Build-Week-Secret-Recipes/backend</h2>`);
 });
+app.use(cors())
 server.use('/api/auth',authRouter)
 server.use('/api/users',usersRouter)
 server.use('/api/recipes',recipeRouter)
